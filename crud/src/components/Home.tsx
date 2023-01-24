@@ -1,49 +1,53 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {getMovies, deleteMovie} from '../services/index'
+import { getMovies, deleteMovie } from "../services/index";
 import { Link } from "react-router-dom";
-import { EyeIcon } from '@heroicons/react/24/solid'
-import { PencilSquareIcon } from '@heroicons/react/24/solid'
-import { TrashIcon } from '@heroicons/react/24/solid'
+import { EyeIcon } from "@heroicons/react/24/solid";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import { TrashIcon } from "@heroicons/react/24/solid";
 
 function Home() {
   const [movies, setMovies] = useState([]);
-  const headers = { "X-Test": "NimboPeru" }
+  const headers = { "X-Test": "NimboPeru" };
   function loadMovies() {
-    const headers = { "X-Test": "NimboPeru" }
-    axios.get("https://nimbo-movies-backend.azurewebsites.net/movies", { headers })
-    .then((res) => {
-      setMovies(res.data);
-    })
-    .catch(error => {
-      console.log("Something went wrong", error)
-    })
+    const headers = { "X-Test": "NimboPeru" };
+    axios
+      .get("https://nimbo-movies-backend.azurewebsites.net/movies", { headers })
+      .then((res) => {
+        setMovies(res.data);
+      })
+      .catch((error) => {
+        console.log("Something went wrong", error);
+      });
   }
 
   useEffect(() => {
     loadMovies();
   }, []);
-      // show Data;
-      useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await getMovies()
-    
-            setMovies(response)
-          } catch (error) {
-            console.log(error);
-          }
-        };
-    
-        fetchData();
-      }, [setMovies]);
+  // show Data;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getMovies();
 
-  function deleteMovie(id:string) {
-    axios.delete(`https://nimbo-movies-backend.azurewebsites.net/movies/${id}`, { headers })
-    .then(loadMovies())
-    .catch(error => {
-      console.log("Something went wrong", error)
-    })
+        setMovies(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [setMovies]);
+
+  function deleteMovie(id: string) {
+    axios
+      .delete(`https://nimbo-movies-backend.azurewebsites.net/movies/${id}`, {
+        headers,
+      })
+      .then(loadMovies())
+      .catch((error) => {
+        console.log("Something went wrong", error);
+      });
   }
 
   return (
@@ -90,43 +94,43 @@ function Home() {
                     </tr>
                   </thead>
                   <tbody className="border-black border-b-2">
-                    {movies.map((data, index) => (
-                      <tr
-                        key={index}
-                        className="bg-white border-b-2 border-black"
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 ">
-                          {index + 1}
-                        </td>
-                        <td className="text-xl text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
-                          {data.title}
-                        </td>
-                        <td className="text-xl text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
-                          {data.year}
-                        </td>
-                        <td className="text-xl text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
-                          {data.description}
-                        </td>
-                        <td className="text-sm flex justify-between  items-center text-gray-900 font-bold px-6 py-4 space-x-4 whitespace-nowrap">
-                          <Link
-                            to={`/movies/${data._id}`}
-                          >
-                            <EyeIcon className="h-6 w-6 text-gray-500 "/>
-                          </Link>
-                          <Link
-                            to={`/edit-movie/${data._id}`}
-                          >
-                            <PencilSquareIcon className="h-6 w-6 text-indigo-500 "/>
-                          </Link>
-                          <Link
-                            onClick={()=>deleteMovie(data._id)}
-                            to={"#"}
-                          >
-                            <TrashIcon className="h-6 w-6 text-red-500 "/>
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
+                    {movies ? (
+                      movies.map((data, index) => (
+                        <tr
+                          key={index}
+                          className="bg-white border-b-2 border-black"
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 ">
+                            {index + 1}
+                          </td>
+                          <td className="text-xl text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
+                            {data.title}
+                          </td>
+                          <td className="text-xl text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
+                            {data.year}
+                          </td>
+                          <td className="text-xl text-gray-900 font-semibold px-6 py-4 whitespace-nowrap">
+                            {data.description}
+                          </td>
+                          <td className="text-sm flex justify-between  items-center text-gray-900 font-bold px-6 py-4 space-x-4 whitespace-nowrap">
+                            <Link to={`/movies/${data._id}`}>
+                              <EyeIcon className="h-6 w-6 text-gray-500 " />
+                            </Link>
+                            <Link to={`/edit-movie/${data._id}`}>
+                              <PencilSquareIcon className="h-6 w-6 text-indigo-500 " />
+                            </Link>
+                            <Link
+                              onClick={() => deleteMovie(data._id)}
+                              to={"#"}
+                            >
+                              <TrashIcon className="h-6 w-6 text-red-500 " />
+                            </Link>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <h1>loading ... </h1>
+                    )}
                   </tbody>
                 </table>
               </div>

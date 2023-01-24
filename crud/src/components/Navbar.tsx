@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ModalInterface } from "../types";
 import Modal from "./Modal";
 import Search from "./Search";
 
